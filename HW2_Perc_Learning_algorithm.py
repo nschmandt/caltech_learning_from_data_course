@@ -38,8 +38,6 @@ for i in range(0,1000):
 
     #Repeat until correct, save the number of iterations required
 
-
-
     number_of_iterations=[]
     while len(error_list)>0:
         temp = np.random.randint(0, len(error_list))
@@ -48,7 +46,7 @@ for i in range(0,1000):
         error_list = points_to_classify[prediction != correct_pred]
         error_pred = correct_pred[prediction != correct_pred]
         number_of_iterations.append(len(error_list))
-        if len(number_of_iterations)>10000:
+        if len(number_of_iterations)>10000: #If it hasn't converged in 10000 tried, something is wrong
             break
             print("perceptron failed to converge!")
     average_iterations.append(len(number_of_iterations))
@@ -56,7 +54,3 @@ for i in range(0,1000):
 
 print(np.mean(average_iterations))
 
-'''
-linear_regression_matrix=np.dot(np.dot(inv(np.dot(points_to_classify.transpose(),points_to_classify)), \
-                                       points_to_classify.transpose()),correct_pred)
-'''
