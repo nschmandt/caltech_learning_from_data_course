@@ -2,11 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.linalg import inv
 
-#set up the secret correct function, starting with two random points and creating a classifying line
-
 average_iterations=[]
 
 for i in range(0,1000):
+
+    # set up the secret correct function, starting with two random points and creating a classifying line
 
     hidden_f=(np.random.rand(2,2)-.5)*2
     m=(hidden_f[1,1]-hidden_f[0,1])/(hidden_f[1,0]-hidden_f[0,0])
