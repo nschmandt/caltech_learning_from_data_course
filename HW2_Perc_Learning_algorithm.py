@@ -10,7 +10,7 @@ for i in range(0,1000):
     hidden_f=(np.random.rand(2,2)-.5)*2
     m=(hidden_f[1,1]-hidden_f[0,1])/(hidden_f[1,0]-hidden_f[0,0])
     b=-m*hidden_f[0,0]+hidden_f[0,1]
-    number_of_points_to_classify=100
+    number_of_points_to_classify=10
     correct_percep=np.array([-m, 1, -b])
 
     #set up points to be classified
@@ -33,8 +33,6 @@ for i in range(0,1000):
     prediction = np.sign((points_to_classify * weights).sum(axis=1))
     error_list = points_to_classify[prediction != correct_pred]
     error_pred = correct_pred[prediction != correct_pred]
-    temp=np.random.randint(0, len(error_list))
-    weights = weights + (correct_pred[temp]-prediction[temp])*error_list[temp]
 
     #Repeat until correct, save the number of iterations required
 
