@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.linalg import inv
 
 #set up the secret correct function, starting with two random points and creating a classifying line
 
@@ -27,9 +28,15 @@ for i in range(0,1000):
 
     correct_pred=np.sign(np.sum(points_to_classify*correct_percep, axis=1))
 
-    #first initial classification
+    #classify the weights as zeros (comment out second line) or by the linear regression classification
 
     weights=np.array([0,0,0])
+
+    weights=np.dot(np.dot(inv(np.dot(points_to_classify.transpose(),points_to_classify)), \
+                                           points_to_classify.transpose()),correct_pred)
+
+    # first initial classification
+
     prediction = np.sign((points_to_classify * weights).sum(axis=1))
     error_list = points_to_classify[prediction != correct_pred]
     error_pred = correct_pred[prediction != correct_pred]
