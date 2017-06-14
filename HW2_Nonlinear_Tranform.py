@@ -17,7 +17,7 @@ for j in range(0,1000):
 
     #set up points to be classified
 
-    number_of_points_to_classify=10
+    number_of_points_to_classify=1000
 
     points_to_classify=(np.random.rand(number_of_points_to_classify,2)-.5)*2
 
@@ -26,22 +26,26 @@ for j in range(0,1000):
     # plt.scatter(points_to_classify[:,0], points_to_classify[:,1])
     # plt.show()
 
-    #set up correct prediction
+    #set up correct prediction, note that 10% are misclassified as "noise"
 
     correct_pred=[]
+    noise_generation=list(range(len(points_to_classify)))
+    np.random.shuffle(noise_generation)
     for i in range(0, len(points_to_classify)):
         correct_pred.append(hidden_f(points_to_classify[i,0], points_to_classify[i,1]))
+        if noise_generation[i]<(len(points_to_classify)/10):
+            correct_pred[i]=correct_pred[i]*-1
 
-
-
+    #Calculate a linear regression of the data and in-sample error
 
     linear_regression_matrix = np.dot(np.dot(inv(np.dot(points_to_classify.transpose(), points_to_classify)), \
                                              points_to_classify.transpose()), correct_pred)
 
     linear_prediction = np.sign((linear_regression_matrix * points_to_classify).sum(axis=1))
 
+    average_error.append(np.sum(correct_pred != linear_prediction))
 
-
+    #Construct a matrix for nonlinear transformation, of (1, x1, x2, x1x2, x1**2, x2**2)
 
     weight_matrix = np.ones((len(points_to_classify), 6))
     for i in range(0, len(weight_matrix)):
@@ -51,14 +55,12 @@ for j in range(0,1000):
         weight_matrix[i, 4] = points_to_classify[i, 0] ** 2
         weight_matrix[i, 5] = points_to_classify[i, 1] ** 2
 
+    #Perform linear regression on transformed data
+
     weight_linear_regression_matrix = np.dot(np.dot(inv(np.dot(weight_matrix.transpose(), weight_matrix)), \
                                              weight_matrix.transpose()), correct_pred)
 
     weight_prediction = np.sign((weight_linear_regression_matrix * weight_matrix).sum(axis=1))
-
-    # calculate the error
-
-    average_error.append(np.sum(correct_pred != linear_prediction))
 
     weight_error.append(np.sum(correct_pred != weight_prediction))
 
@@ -81,19 +83,18 @@ for j in range(0,1000):
     test_prediction = np.sign((weight_linear_regression_matrix * test_weight_matrix).sum(axis=1))
 
     correct_test_results = []
+    test_noise_generation = list(range(len(test_points_to_classify)))
+    np.random.shuffle(test_noise_generation)
     for i in range(0, len(test_points_to_classify)):
-        correct_pred.append(hidden_f(test_points_to_classify[i, 0], test_points_to_classify[i, 1]))
+        correct_test_results.append(hidden_f(test_points_to_classify[i, 0], test_points_to_classify[i, 1]))
+        if test_noise_generation[i] < (len(test_points_to_classify) / 10):
+            correct_test_results[i] = correct_test_results[i] * -1
 
     # calculate the error
 
-    average_test_error.append(np.sum(correct_test_results != test_points_to_classify))
+    average_test_error.append(np.sum(correct_test_results != test_prediction))
 
-
-
-print(weight_linear_regression_matrix)
-
-print(np.mean(average_error))
+print(np.mean(average_error)/number_of_points_to_classify)
 print(np.mean(weight_linear_regression_matrix_av, axis=1))
 
-print(np.mean(average_test_error))
-
+print(np.mean(average_test_error)/1000)
