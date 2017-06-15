@@ -42,6 +42,6 @@ for i in range(0, 1000):
 
     # calculate the error
 
-    average_error.append(np.sum(correct_test_results != test_points_to_classify))
+    average_error.append(np.sum(correct_test_results != test_prediction))
 
 print(np.mean(average_error))
