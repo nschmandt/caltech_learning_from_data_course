@@ -5,8 +5,11 @@ from numpy.linalg import inv
 def calc_change_v(w, points_to_classify, correct_pred):
     total_value=0
     for i in np.arange(0, len(points_to_classify)):
-        total_value+=np.log(1+np.exp(-correct_pred[i]*w*points_to_classify[i]))
+        #total_value+=np.log(1+np.exp(-correct_pred[i]*w*points_to_classify[i]))
+        total_value+=correct_pred[i]*points_to_classify[i]/(1+ np.exp(correct_pred[i]*w*points_to_classify[i]))
+
     total_value=total_value/len(points_to_classify)
+    return total_value
 
 average_error=[]
 for i in range(0, 1000):
@@ -28,8 +31,8 @@ for i in range(0, 1000):
 
     correct_pred=np.sign(np.sum(points_to_classify*target_function, axis=1))
 
-    w=[1,1,1]
-    prev_w=[0,0,0]
+    w=np.array([1,1,1])
+    prev_w=np.array([0,0,0])
 
     while np.linalg.norm(w-prev_w)>.01:
         prev_w=w
@@ -38,7 +41,7 @@ for i in range(0, 1000):
 
 
 
-
+print(w)
 
 
 
